@@ -5,7 +5,6 @@ import { Stage, Layer } from 'react-konva'
 import GraphNode from './GraphNode'
 import GraphEdge from './GraphEdge'
 import { AppStateContext } from './AppStateProvider'
-import { GraphSpec } from './graph-spec'
 import useWindowDimensions from './window-dimensions'
 
 export default function Graph() {
@@ -51,10 +50,12 @@ export default function Graph() {
         // Do bi-linear mapping on nodes
         for ( let i=0; i<nodesAndEdges.nodes.length; i++ ) {
             let node = nodesAndEdges.nodes[i]
+            console.log(node.radius ? node.radius : 7)
             fitNodesAndEdges.nodes.push({
                 id: node.id,
                 x: widthOffset + ((node.x-minX)/unfitWidth)*stageDims.width*stagePaddingRatio,
                 y: heightOffset + ((node.y-minY)/unfitHeight)*stageDims.height*stagePaddingRatio,
+                radius: node.radius ? node.radius : 7,
                 color: node.color,
             })
         }
@@ -82,14 +83,12 @@ export default function Graph() {
         // Push nodes into array
         for ( let i=0; i<graph.nodes.length; i++ ) {
             let node = graph.nodes[i]
-            let color = GraphSpec.colors[node.extra.color]
-            if ( color === null || color === undefined ) { color = "pink" }
             nodesAndEdges.nodes.push({
                 id: node.id,
                 x: node.coords.x,
                 y: node.coords.y,
                 z: node.coords.z,
-                color: color,
+                color: node.extra.color ? node.extra.color : "pink",
             })
             // Setup temporary node map for reference when setting edge array
             tmpNodeMap[node.id] = { x: node.coords.x, y: node.coords.y, z: node.coords.z }
@@ -162,17 +161,6 @@ export default function Graph() {
             <Layer>
                 {
                     !showPopupInfo &&
-                    graphComponents.nodes.map(
-                        n => <GraphNode
-                                key={n.id}
-                                x={n.x}
-                                y={n.y}
-                                color={n.color}
-                            />
-                    )
-                }
-                {
-                    !showPopupInfo &&
                     graphComponents.edges.map( 
                         e => <GraphEdge
                                 key={e.id}
@@ -180,6 +168,18 @@ export default function Graph() {
                                 y1={e.y1}
                                 x2={e.x2}
                                 y2={e.y2}
+                            />
+                    )
+                }
+                {
+                    !showPopupInfo &&
+                    graphComponents.nodes.map(
+                        n => <GraphNode
+                                key={n.id}
+                                x={n.x}
+                                y={n.y}
+                                radius={n.radius}
+                                color={n.color}
                             />
                     )
                 }

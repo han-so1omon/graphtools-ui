@@ -4,7 +4,7 @@ import { Circle } from 'react-konva'
 
 export default function GraphNode(props) {
     return (
-        <Circle x={props.x} y={props.y} radius={10} fill={props.color} />
+        <Circle x={props.x} y={props.y} radius={props.radius} fill={props.color} />
     )
 }
 
