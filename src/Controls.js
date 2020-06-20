@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Pane, Combobox, Switch } from 'evergreen-ui'
+import { Pane, Combobox } from 'evergreen-ui'
 import { ReadyState } from 'react-use-websocket'
 
 import GenericGraphControls from './GenericGraphControls'
@@ -7,12 +7,7 @@ import RBTreeControls from './RBTreeControls'
 import { AppStateContext, AppDispatchContext } from './AppStateProvider'
 
 export default function Controls(props) {
-    const dispatch = useContext(AppDispatchContext)
-    const {
-        showPopupInfo,
-    } = useContext(AppStateContext)
-
-    const [graphType, setGraphType] = useState('red-black tree')
+    const [graphType, setGraphType] = useState('generic')
     let graphControls
     if (graphType === 'generic') {
         graphControls = <GenericGraphControls
@@ -35,12 +30,6 @@ export default function Controls(props) {
                     autocompleteProps={{
                         title: 'graph type'
                     }}
-                />
-            </Pane>
-            <Pane margin={10} display="flex" flexDirection="column" float="right">
-                <Switch
-                    checked={showPopupInfo}
-                    onChange={ e => dispatch({ type: 'SET_SHOW_POPUP_INFO', payload: !showPopupInfo }) }
                 />
             </Pane>
             { graphControls } 

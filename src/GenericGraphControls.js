@@ -1,45 +1,54 @@
 import React, { useState } from 'react';
-import { Pane, Dialog, Button, Text, TextInput } from 'evergreen-ui'
+import { Pane, FilePicker } from 'evergreen-ui'
 import { ReadyState } from 'react-use-websocket'
 
 export default function GenericGraphControls(props) {
-    const [state, setState] = useState({ showDialog: false})
+    const [state, setState] = useState({
+        showDialog: false,
+        nodeLocation: '',
+        nodeEdges: '',
+    })
+
+    function resetGraph() {
+    }
+
+    function loadGraph(graphFile) {
+        var reader = new FileReader()
+        reader.readAsText(graphFile)
+        reader.onload = function() {
+            let msg = {
+                structure: 'generic',
+                action: 'LoadCSV',
+                params: {
+                    csvText: reader.result,
+                }
+            }
+            props.sendMessage(JSON.stringify(msg))
+        }
+
+    }
+
+    function addNode(loc, edges) {
+        console.log(loc, edges)
+
+        /*
+        msg = {
+            structure: 'red-black tree',
+            action: 'Insert'
+        }
+        */
+        //props.sendMessage(JSON.stringify(msg))
+    }
 
     return (
         <Pane alignItems="center" justifyContent="center">
-            <Dialog
-                isShown={state.showDialog}
-                title="Add node"
-                onCloseComplete={() => setState({ showDialog: false })}
-            >
-                <Pane>
-                    <Text marginRight={10}>
-                        Location
-                    </Text>
-                    <TextInput
-                        name="location"
-                        placeholder="x, y, z"
-                    />
-                </Pane>
-                <Pane>
-                    <Text marginRight={10}>
-                        Edges
-                    </Text>
-                    <TextInput
-                        name="edges"
-                        placeholder="n1, n2, n3, n4"
-                    />
-                </Pane>
-            </Dialog>
-            <Button
-                marginTop={50}
+            <FilePicker
+                martinTop={100}
                 marginRight={25}
-                appearance="primary"
-                intent="success"
-                onClick={() => setState({ showDialog: true })}
-            >
-                Add node
-            </Button>
+                placeholder={"Select a graph file"}
+                onChange={(f) => loadGraph(f[0])}
+                multiple={false}
+            />
         </Pane>
     )
 }

@@ -9,7 +9,6 @@ import useWindowDimensions from './window-dimensions'
 
 export default function Graph() {
     const {
-        showPopupInfo,
         graph,
     } = useContext(AppStateContext)
 
@@ -50,7 +49,6 @@ export default function Graph() {
         // Do bi-linear mapping on nodes
         for ( let i=0; i<nodesAndEdges.nodes.length; i++ ) {
             let node = nodesAndEdges.nodes[i]
-            console.log(node.radius ? node.radius : 7)
             fitNodesAndEdges.nodes.push({
                 id: node.id,
                 x: widthOffset + ((node.x-minX)/unfitWidth)*stageDims.width*stagePaddingRatio,
@@ -98,6 +96,7 @@ export default function Graph() {
         let edgeCount = 0
         for ( let i=0; i<graph.nodes.length; i++ ) {
             let node = graph.nodes[i]
+            if (!node.edges) { continue }
             for ( let j=0; j<node.edges.length; j++ ) {
                 let edge = node.edges[j]
                 nodesAndEdges.edges.push({
@@ -133,34 +132,11 @@ export default function Graph() {
         }
     }, [graph])
 
-            /*
-            newNodeComponents.push(
-                <GraphNode id={1} x={400} y={100} color="blue"/>,
-                <GraphNode id={2} x={300} y={200} color="blue"/>,
-                <GraphNode id={3} x={500} y={200} color="blue"/>,
-                <GraphNode id={4} x={200} y={300} color="blue"/>,
-                <GraphNode id={5} x={400} y={300} color="blue"/>,
-                <GraphNode id={6} x={600} y={300} color="blue"/>,
-                <GraphNode id={7} x={100} y={400} color="blue"/>,
-                <GraphNode id={8} x={300} y={400} color="blue"/>,
-            )
-            newEdgeComponents.push(
-                <GraphEdge id={1} x1={400} y1={100} x2={300} y2={200}/>,
-                <GraphEdge id={2} x1={400} y1={100} x2={500} y2={200}/>,
-                <GraphEdge id={3} x1={300} y1={200} x2={200} y2={300}/>,
-                <GraphEdge id={4} x1={500} y1={200} x2={400} y2={300}/>,
-                <GraphEdge id={5} x1={500} y1={200} x2={600} y2={300}/>,
-                <GraphEdge id={6} x1={200} y1={300} x2={100} y2={400}/>,
-                <GraphEdge id={7} x1={200} y1={300} x2={300} y2={400}/>,
-            )
-            */
-
     // TODO handle showPopupInfo
     return (
         <Stage width={stageDims.width} height={stageDims.height}>
             <Layer>
                 {
-                    !showPopupInfo &&
                     graphComponents.edges.map( 
                         e => <GraphEdge
                                 key={e.id}
@@ -172,7 +148,6 @@ export default function Graph() {
                     )
                 }
                 {
-                    !showPopupInfo &&
                     graphComponents.nodes.map(
                         n => <GraphNode
                                 key={n.id}
