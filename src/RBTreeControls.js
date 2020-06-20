@@ -29,7 +29,7 @@ export default function RBTreeControls(props) {
                 case 'REMOVE_NODE':
                     msg = {
                         structure: 'red-black tree',
-                        action: 'DeleteOneChild'
+                        action: 'Delete'
                     }
                     break
                 default:
